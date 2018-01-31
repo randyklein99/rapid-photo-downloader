@@ -19,7 +19,8 @@ FROM ubuntu:17.10
 RUN apt-get update && apt-get install -y \
   rapid-photo-downloader
 
-VOLUME [ "/data" ]
+VOLUME [ "/data/source/" ]
+VOLUME [ "/data/target/ ]
 
 ENTRYPOINT [ "/usr/bin/rapid-photo-downloader" ]
 #CMD [ "" ]
