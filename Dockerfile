@@ -1,4 +1,4 @@
-# Run Rapid Photo Downloader in a container
+# Run Rapid Photo Downloader in a container on windows
 #
 # docker run -it \
 #	--net host \ 
@@ -19,8 +19,16 @@ FROM ubuntu:17.10
 RUN apt-get update && apt-get install -y \
   rapid-photo-downloader
 
+RUN useradd -m -U rpd
+
+USER rpd
+
 VOLUME [ "/data/source/" ]
 VOLUME [ "/data/target/" ]
+
+# create a volume to persist configuration
+# location will change with 0.9 version in ubuntu 18.04
+VOLUME [ "/home/rpd/.local/share/" ] 
 
 ENTRYPOINT [ "/usr/bin/rapid-photo-downloader" ]
 #CMD [ "" ]
