@@ -20,7 +20,7 @@ RUN apt-get update && apt-get install -y \
   rapid-photo-downloader
 
 VOLUME [ "/data/source/" ]
-VOLUME [ "/data/target/ ]
+VOLUME [ "/data/target/" ]
 
 ENTRYPOINT [ "/usr/bin/rapid-photo-downloader" ]
 #CMD [ "" ]
