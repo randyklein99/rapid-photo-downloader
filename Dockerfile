@@ -2,7 +2,10 @@
 #
 # docker run -it -e DISPLAY=<server>:0.0 -v <source>:/data/source -v <target>:/data/target/ -v <dir>\RapidPhotoDownloaderConfig\local\:/home/rpd/.local/share/ -v <dir>\RapidPhotoDownloaderConfig\home\:/home/rpd/ randyklein99/rapid-photo-downloader
 
-FROM ubuntu:17.10
+FROM opensuse:tumbleweed
+
+RUN zypper --non-interactive install --no-recommends \ 
+  rapid-photo-downloader 
 
 #RUN apt update && apt install -y \
 #  sudo \
@@ -39,18 +42,18 @@ FROM ubuntu:17.10
  # python3-sortedcontainers 
   
 
-RUN echo "deb-src http://archive.ubuntu.com/ubuntu bionic main restricted universe multiverse" | tee -a /etc/apt/sources.list
+#RUN echo "deb-src http://archive.ubuntu.com/ubuntu bionic main restricted universe multiverse" | tee -a /etc/apt/sources.list
 
-RUN echo "Package: * \
-Pin: release n=artful \
-Pin-Priority: -10 \
-\
-Package: rapid-photo-downloader \ 
-Pin: release n=bionic \
-Pin-Priority: 500" >> /etc/apt/preferences.d/somename.pref
+#RUN echo "Package: * \
+#Pin: release n=artful \
+#Pin-Priority: -10 \
+#\
+#Package: rapid-photo-downloader \ 
+#Pin: release n=bionic \
+#Pin-Priority: 500" >> /etc/apt/preferences.d/somename.pref
 
-RUN apt-get update && apt-get install -y \
-  rapid-photo-downloader
+#RUN apt-get update && apt-get install -y \
+#  rapid-photo-downloader
 
 #RUN python3 -m pip install upgrade
 
@@ -65,7 +68,7 @@ RUN apt-get update && apt-get install -y \
 #ENV LANGUAGE="en_US:en"
 #ENV LC_ALL="en_US.UTF-8"
 
-RUN groupadd -r rpd && useradd -g rpd -m rpd && usermod -aG sudo rpd
+#RUN groupadd -r rpd && useradd -g rpd -m rpd && usermod -aG sudo rpd
 
 VOLUME [ "/data/source/" ]
 VOLUME [ "/data/target/" ]
@@ -81,7 +84,7 @@ VOLUME [ "/data/target/" ]
 #    's/%sudo\s\+ALL=(ALL\(:ALL\)\?)\s\+ALL/%sudo ALL=NOPASSWD:ALL/g' \
 #    /etc/sudoers
 
-USER rpd
+#USER rpd
 #WORKDIR /home/rpd
 
 #ENV LANG="en_US.UTF-8"
@@ -109,5 +112,5 @@ USER rpd
 
 #RUN sudo deluser rpd sudo
 
-ENTRYPOINT [ "/usr/bin/rapid-photo-downloader" ]
+#ENTRYPOINT [ "/usr/bin/rapid-photo-downloader" ]
 #CMD [ "" ]
