@@ -44,6 +44,7 @@ RUN echo "deb-src http://archive.ubuntu.com/ubuntu bionic main restricted univer
 RUN echo "Package: * \
 Pin: release n=artful \
 Pin-Priority: -10 \
+\
 Package: rapid-photo-downloader \ 
 Pin: release n=bionic \
 Pin-Priority: 500" >> /etc/apt/preferences.d/somename.pref
