@@ -56,7 +56,6 @@ ENV LC_ALL="en_US.UTF-8"
    python3-apt \
    python3-dnf \
    python3-pip \
-   python3-pyprind \
    gstreamer1.0-libav gstreamer1.0-plugins-good \
    libimage-exiftool-perl python3-dev \
    intltool gir1.2-gexiv2-0.10 python3-gi gir1.2-gudev-1.0 \
@@ -79,6 +78,8 @@ ENV LC_ALL="en_US.UTF-8"
    python3-pyqt5 \
    python3-requests
 
+RUN pip install pyprind
+
 #ensure pyqt5 >= 5.9.2, else sip version is impacted   
 
 RUN groupadd -r rpd && useradd -g rpd -m rpd
@@ -88,7 +89,7 @@ WORKDIR /home/rpd
 ### pip packages, might have to do it as non-root user if this doesn't work
 #setuptools
 #wheel
-RUN pip install --user wheel setuptools
+RUN pip install --user wheel setuptools pyprind dnf
 
 # couldn't I just use wget instead?
 RUN python3 requests.get("https://launchpad.net/rapid/pyqt/0.9.7/+download/rapid-photo-downloader-0.9.7.tar.gz")
