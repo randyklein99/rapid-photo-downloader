@@ -87,7 +87,7 @@ WORKDIR /home/rpd
 RUN pip3 install --upgrade pip setuptools wheel && pip3 install pyprind
 
 # couldn't I just use wget instead?
-RUN python3 requests.get("https://launchpad.net/rapid/pyqt/0.9.7/+download/rapid-photo-downloader-0.9.7.tar.gz")
+RUN wget https://launchpad.net/rapid/pyqt/0.9.7/+download/rapid-photo-downloader-0.9.7.tar.gz
 
 # there is a list of pip packages in requirements.txt in the tarfile
 
