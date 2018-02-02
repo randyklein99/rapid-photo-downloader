@@ -54,7 +54,6 @@ ENV LC_ALL="en_US.UTF-8"
 # packages id'd in install.py
  RUN apt install -y \
    python3-apt \
-   python3-dnf \
    python3-pip \
    gstreamer1.0-libav gstreamer1.0-plugins-good \
    libimage-exiftool-perl python3-dev \
@@ -77,8 +76,6 @@ ENV LC_ALL="en_US.UTF-8"
    qt5-image-formats-plugins \
    python3-pyqt5 \
    python3-requests
-
-RUN pip install pyprind
 
 #ensure pyqt5 >= 5.9.2, else sip version is impacted   
 
