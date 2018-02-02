@@ -5,8 +5,6 @@
 FROM ubuntu:17.10
 
 #RUN apt update && apt install -y \
-#  sudo \
-#  wget \
 #  python3 \
 #  python3-dev \
 #  python3-pip \
@@ -56,9 +54,14 @@ ENV LC_ALL="en_US.UTF-8"
    wget \ 
    python3-apt \
    python3-pip \
-   gstreamer1.0-libav gstreamer1.0-plugins-good \
-   libimage-exiftool-perl python3-dev \
-   intltool gir1.2-gexiv2-0.10 python3-gi gir1.2-gudev-1.0 \
+   gstreamer1.0-libav \
+   gstreamer1.0-plugins-good \
+   libimage-exiftool-perl \
+   python3-dev \
+   intltool \
+   gir1.2-gexiv2-0.10 \
+   python3-gi \
+   gir1.2-gudev-1.0 \
    gir1.2-udisks-2.0 \
    gir1.2-notify-0.7 \
    gir1.2-glib-2.0 \
@@ -96,9 +99,59 @@ RUN wget https://launchpad.net/rapid/pyqt/0.9.7/+download/rapid-photo-downloader
 # from this line: install --user --disable-pip-version-check --no-deps {}'.format(installer)
 RUN pip3 install --disable-pip-version-check --no-deps rapid-photo-downloader-0.9.7.tar.gz
 
+RUN apt-get install -y \
+  intltool \
+  libgphoto2-dev \
+  libzmq3-dev \
+  libraw-bin \
+  libraw16 \
+  python3 \
+  gir1.2-gexiv2-0.10 \
+  gir1.2-gudev-1.0 \
+  gir1.2-udisks-2.0 \
+  gir1.2-notify-0.7 \
+  gir1.2-gstreamer-1.0 \
+  gstreamer1.0-libav \
+  gstreamer1.0-plugins-good \
+  python3-tk \
+  qt5-style-plugins \
+  python3-dev \
+  python3-pip \
+  python3-pyqt5 \
+  python3-apt \
+  exiv2 \
+  libgphoto2-dev \
+  gphoto2 \
+  libmediainfo0v5 \
+  libzmq3-dev 
 
 
-USER rpd
+
+
+
+
+
+
+RUN pip3 install \
+  gphoto2 \
+  colour \
+  pyzmq \
+  psutil \
+  pyxdg \
+  arrow \
+  pymediainfo \
+  rawkit \
+  tornado \
+  python-dateutil \
+  pyprind \
+  colorlog \
+  typing \
+  scandir \
+  easygui \
+  sortedcontainers \
+  requests 
+
+#USER rpd
 
 
 ### install.py step
@@ -141,12 +194,16 @@ VOLUME [ "/data/target/" ]
 #ENV LANGUAGE="en_US:en"
 #ENV LC_ALL="en_US.UTF-8"
 
+RUN apt-get install -y \
+  python3-exif \
+
+
 #
 #python3-colour \
 #  python3-gphoto2 \
 #  python3-pymediainfo \
 #  python3-pyprind \
-#  python3-rawkit \
+
 #  python3-exif \
 #  python3-gphoto2cffi \
 #  qt5-image-formats-plugins
