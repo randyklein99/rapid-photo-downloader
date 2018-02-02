@@ -84,8 +84,7 @@ WORKDIR /home/rpd
 ### pip packages, might have to do it as non-root user if this doesn't work
 #setuptools
 #wheel
-RUN python3 -m pip install --upgrade pip setuptools wheel 
-RUN pip3 install pyprind
+RUN pip3 install --upgrade pip setuptools wheel && pip3 install pyprind
 
 # couldn't I just use wget instead?
 RUN python3 requests.get("https://launchpad.net/rapid/pyqt/0.9.7/+download/rapid-photo-downloader-0.9.7.tar.gz")
@@ -94,7 +93,7 @@ RUN python3 requests.get("https://launchpad.net/rapid/pyqt/0.9.7/+download/rapid
 
 # might need --user
 # from this line: install --user --disable-pip-version-check --no-deps {}'.format(installer)
-RUN pip install --disable-pip-version-check --no-deps rapid-photo-downloader-0.9.7.tar.gz
+RUN pip3 install --disable-pip-version-check --no-deps rapid-photo-downloader-0.9.7.tar.gz
 
 
 
