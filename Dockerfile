@@ -4,58 +4,28 @@
 
 FROM opensuse:tumbleweed
 
-RUN zypper --non-interactive install --no-recommends \ 
-  rapid-photo-downloader 
+#to fix "package module error" 
+# still not working, not sure why
+ENV LANG="en_US.UTF-8"
+ENV LANGUAGE="en_US:en"
+ENV LC_ALL="en_US.UTF-8"
+ENV PYTHONIOENCODING=UTF-8
 
-#RUN apt update && apt install -y \
-#  sudo \
-#  wget \
-#  python3 \
-#  python3-dev \
-#  python3-pip \
-#  python3-pyqt5 \
-#  python3-apt \
-#  libimage-exiftool-perl \
-#  exiv2 \
-#  libgphoto2-dev \
-#  gphoto2 \
-#  libmediainfo0v5 \
-#  libzmq3-dev \
-#  qt5-style-plugins \
-#  libraw16 \
-#  python3-tk \
-#  locales \
-#  gstreamer1.0-libav \
-#  gstreamer1.0-plugins-good \
-#  intltool \
-#  gir1.2-gexiv2-0.10 \
-#  gir1.2-gudev-1.0 \
-#  gir1.2-udisks-2.0 \
-#  gir1.2-notify-0.7 \
-#  gir1.2-gstreamer-1.0 \
-#  python3-arrow \
- # python3-psutil \
- # python3-zmq \
- # python3-colorlog \
- # libraw-bin \
- # python3-easygui \
- # python3-sortedcontainers 
-  
-
-#RUN echo "deb-src http://archive.ubuntu.com/ubuntu bionic main restricted universe multiverse" | tee -a /etc/apt/sources.list
-
-#RUN echo "Package: * \
-#Pin: release n=artful \
-#Pin-Priority: -10 \
-#\
-#Package: rapid-photo-downloader \ 
-#Pin: release n=bionic \
-#Pin-Priority: 500" >> /etc/apt/preferences.d/somename.pref
-
-#RUN apt-get update && apt-get install -y \
+#RUN zypper --non-interactive install --no-recommends \
 #  rapid-photo-downloader
 
-#RUN python3 -m pip install upgrade
+## Output after above command
+#Output of systemd-presets-branding-CAASP-15.0-3.1.noarch.rpm %posttrans script:
+#    Created symlink /etc/systemd/system/default.target.wants/issue-add-ssh-keys.service -> /usr/lib/systemd/system/issue-add-ssh-keys.service.
+#    Created symlink /etc/systemd/system/multi-user.target.wants/kbdsettings.service -> /usr/lib/systemd/system/kbdsettings.service.
+
+#Output of kmod-24-6.1.x86_64.rpm %posttrans script:
+#    Please run mkinitrd as soon as your system is complete.
+
+#Output of udev-234-12.1.x86_64.rpm %posttrans script:
+#    Creating /lib/udev -> /usr/lib/udev symlink.
+##
+
 
 #RUN locale-gen en_US.UTF-8 && \
 #  sed -i -e 's/# en_US.UTF-8 UTF-8/en_US.UTF-8 UTF-8/' /etc/locale.gen && \
@@ -68,22 +38,18 @@ RUN zypper --non-interactive install --no-recommends \ 
 #ENV LANGUAGE="en_US:en"
 #ENV LC_ALL="en_US.UTF-8"
 
-#RUN groupadd -r rpd && useradd -g rpd -m rpd && usermod -aG sudo rpd
+#change to how suse creates users
+RUN groupadd -r rpd && useradd -g rpd -m rpd 
 
 VOLUME [ "/data/source/" ]
 VOLUME [ "/data/target/" ]
 
 # create a volume to persist configuration
-# location will change with 0.9 version in ubuntu 18.04
+# location will change with 0.9 version 
 #VOLUME [ "/home/rpd/" ]
 #VOLUME [ "/home/rpd/.local/share/" ] 
 
-#RUN mkdir -p /usr/local/share/man/man1
-
-#RUN sed -i.bkp -e \
-#    's/%sudo\s\+ALL=(ALL\(:ALL\)\?)\s\+ALL/%sudo ALL=NOPASSWD:ALL/g' \
-#    /etc/sudoers
-
+#
 #USER rpd
 #WORKDIR /home/rpd
 
@@ -91,26 +57,6 @@ VOLUME [ "/data/target/" ]
 #ENV LANGUAGE="en_US:en"
 #ENV LC_ALL="en_US.UTF-8"
 
-#
-#python3-colour \
-#  python3-gphoto2 \
-#  python3-pymediainfo \
-#  python3-pyprind \
-#  python3-rawkit \
-#  python3-exif \
-#  python3-gphoto2cffi \
-#  qt5-image-formats-plugins
-#
-#RUN wget http://archive.ubuntu.com/ubuntu/pool/universe/r/rapid-photo-downloader/rapid-photo-downloader_0.9.7-1_all.deb
-
-#RUN wget https://launchpad.net/rapid/pyqt/0.9.7/+download/install.py
-
-#RUN python3 -m pip install --user --upgrade setuptools wheel
-
-# need to figure out the sudo password work around
-#RUN python3 install.py
-
-#RUN sudo deluser rpd sudo
 
 #ENTRYPOINT [ "/usr/bin/rapid-photo-downloader" ]
 #CMD [ "" ]
