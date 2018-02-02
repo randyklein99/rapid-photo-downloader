@@ -36,21 +36,34 @@ FROM ubuntu:17.10
  # python3-colorlog \
  # libraw-bin \
  # python3-easygui \
- # python3-sortedcontainers 
+ # python3-sortedcontainers \
+
+# packages id'd in install.py
+ RUN apt update && apt install -y \
+   python3-requests \
+   python3-apt \
+   python3-dnf \
+   python3-pip \
+   python3-pyprind 
+
   
+### pip packages, might have to do it as non-root user if this doesn't work
+#setuptools
+#wheel
+#RUN pip install wheel setuptools
 
-RUN echo "deb-src http://archive.ubuntu.com/ubuntu bionic main restricted universe multiverse" | tee -a /etc/apt/sources.list
+#RUN echo "deb-src http://archive.ubuntu.com/ubuntu bionic main restricted universe multiverse" | tee -a /etc/apt/sources.list
 
-RUN echo "Package: * \
-Pin: release n=artful \
-Pin-Priority: -10 \
-\
-Package: rapid-photo-downloader \ 
-Pin: release n=bionic \
-Pin-Priority: 500" >> /etc/apt/preferences.d/somename.pref
+#RUN echo "Package: * \
+#Pin: release n=artful \
+#Pin-Priority: -10 \
+#\
+#Package: rapid-photo-downloader \ 
+#Pin: release n=bionic \
+#Pin-Priority: 500" >> /etc/apt/preferences.d/somename.pref
 
-RUN apt-get update && apt-get install -y \
-  rapid-photo-downloader
+#RUN apt-get update && apt-get install -y \
+#  rapid-photo-downloader
 
 #RUN python3 -m pip install upgrade
 
@@ -65,7 +78,7 @@ RUN apt-get update && apt-get install -y \
 #ENV LANGUAGE="en_US:en"
 #ENV LC_ALL="en_US.UTF-8"
 
-RUN groupadd -r rpd && useradd -g rpd -m rpd && usermod -aG sudo rpd
+RUN groupadd -r rpd && useradd -g rpd -m rpd
 
 VOLUME [ "/data/source/" ]
 VOLUME [ "/data/target/" ]
@@ -81,7 +94,7 @@ VOLUME [ "/data/target/" ]
 #    's/%sudo\s\+ALL=(ALL\(:ALL\)\?)\s\+ALL/%sudo ALL=NOPASSWD:ALL/g' \
 #    /etc/sudoers
 
-USER rpd
+#USER rpd
 #WORKDIR /home/rpd
 
 #ENV LANG="en_US.UTF-8"
@@ -109,5 +122,5 @@ USER rpd
 
 #RUN sudo deluser rpd sudo
 
-ENTRYPOINT [ "/usr/bin/rapid-photo-downloader" ]
+#ENTRYPOINT [ "/usr/bin/rapid-photo-downloader" ]
 #CMD [ "" ]
