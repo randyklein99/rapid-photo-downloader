@@ -53,6 +53,7 @@ ENV LC_ALL="en_US.UTF-8"
 
 # packages id'd in install.py
  RUN apt-get install -y \
+   wget \ 
    python3-apt \
    python3-pip \
    gstreamer1.0-libav gstreamer1.0-plugins-good \
