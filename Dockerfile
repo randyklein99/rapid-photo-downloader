@@ -6,13 +6,13 @@ FROM opensuse:tumbleweed
 
 #to fix "package module error" 
 # still not working, not sure why
-ENV LANG="en_US.UTF-8"
-ENV LANGUAGE="en_US:en"
-ENV LC_ALL="en_US.UTF-8"
+ENV LANG="c.UTF-8"
+ENV LANGUAGE="c:en"
+ENV LC_ALL="c.UTF-8"
 ENV PYTHONIOENCODING=UTF-8
 
-#RUN zypper --non-interactive install --no-recommends \
-#  rapid-photo-downloader
+RUN zypper --non-interactive install --no-recommends \
+  rapid-photo-downloader
 
 ## Output after above command
 #Output of systemd-presets-branding-CAASP-15.0-3.1.noarch.rpm %posttrans script:
