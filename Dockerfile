@@ -38,19 +38,67 @@ FROM ubuntu:17.10
  # python3-easygui \
  # python3-sortedcontainers \
 
+### install locales and set
+RUN apt update && apt install -y locales
+RUN locale-gen en_US.UTF-8 && \
+  sed -i -e 's/# en_US.UTF-8 UTF-8/en_US.UTF-8 UTF-8/' /etc/locale.gen && \
+  echo 'LANG="en_US.UTF-8"' > /etc/default/locale && \
+	dpkg-reconfigure --frontend=noninteractive locales && \
+	update-locale LANG=en_US.UTF-8
+
+### Env vars for locales
+ENV LANG="en_US.UTF-8"
+ENV LANGUAGE="en_US:en"
+ENV LC_ALL="en_US.UTF-8"
+
 # packages id'd in install.py
- RUN apt update && apt install -y \
-   python3-requests \
+ RUN apt install -y \
    python3-apt \
    python3-dnf \
    python3-pip \
-   python3-pyprind 
+   python3-pyprind \
+   gstreamer1.0-libav gstreamer1.0-plugins-good \
+   libimage-exiftool-perl python3-dev \
+   intltool gir1.2-gexiv2-0.10 python3-gi gir1.2-gudev-1.0 \
+   gir1.2-udisks-2.0 \
+   gir1.2-notify-0.7 \
+   gir1.2-glib-2.0 \
+   gir1.2-gstreamer-1.0 \
+   libgphoto2-dev \
+   python3-arrow \
+   python3-psutil \
+   g++ \
+   libmediainfo0v5 \
+   python3-zmq \
+   exiv2 \
+   python3-colorlog \
+   libraw-bin \
+   python3-easygui \
+   python3-sortedcontainers \
+   qt5-image-formats-plugins \
+   python3-pyqt5 \
+   python3-requests
 
+#ensure pyqt5 >= 5.9.2, else sip version is impacted   
+
+RUN groupadd -r rpd && useradd -g rpd -m rpd
+USER rpd
+WORKDIR /home/rpd
   
 ### pip packages, might have to do it as non-root user if this doesn't work
 #setuptools
 #wheel
-#RUN pip install wheel setuptools
+RUN pip install --user wheel setuptools
+
+# couldn't I just use wget instead?
+RUN python3 requests.get("https://launchpad.net/rapid/pyqt/0.9.7/+download/rapid-photo-downloader-0.9.7.tar.gz")
+
+# might need --user
+# from this line: install --user --disable-pip-version-check --no-deps {}'.format(installer)
+RUN pip install --user --disable-pip-version-check --no-deps rapid-photo-downloader-0.9.7.tar.gz
+
+### install.py step
+# set locale
 
 #RUN echo "deb-src http://archive.ubuntu.com/ubuntu bionic main restricted universe multiverse" | tee -a /etc/apt/sources.list
 
@@ -67,18 +115,6 @@ FROM ubuntu:17.10
 
 #RUN python3 -m pip install upgrade
 
-#RUN locale-gen en_US.UTF-8 && \
-#  sed -i -e 's/# en_US.UTF-8 UTF-8/en_US.UTF-8 UTF-8/' /etc/locale.gen && \
-#  echo 'LANG="en_US.UTF-8"' > /etc/default/locale && \
-#	dpkg-reconfigure --frontend=noninteractive locales && \
-#	update-locale LANG=en_US.UTF-8
-
-#Env vars for locales
-#ENV LANG="en_US.UTF-8"
-#ENV LANGUAGE="en_US:en"
-#ENV LC_ALL="en_US.UTF-8"
-
-RUN groupadd -r rpd && useradd -g rpd -m rpd
 
 VOLUME [ "/data/source/" ]
 VOLUME [ "/data/target/" ]
