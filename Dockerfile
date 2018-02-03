@@ -20,5 +20,5 @@ RUN groupadd -r rpd && useradd -g rpd rpd
 #USER rpd
 WORKDIR /home/rpd
 
-#ENTRYPOINT [ "/usr/bin/rapid-photo-downloader" ]
+CMD [ "/usr/bin/rapid-photo-downloader" ]
 #CMD [ "" ]
