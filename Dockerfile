@@ -8,22 +8,31 @@ FROM opensuse:tumbleweed
 # still not working, not sure why
 
 
+#RUN zypper --non-interactive install --no-recommends \
+#  glibc-i18ndata \
+#  glibc-locale
+
+#ENV LANG="en_US.UTF-8"
+#ENV LANGUAGE="en_US:en"
+#ENV LC_ALL="en_US.UTF-8"
+#ENV PYTHONIOENCODING=UTF-8
+
+#RUN localedef -i en_US -f UTF-8 en_US.UTF-8
+
 RUN zypper --non-interactive install --no-recommends \
-  glibc-i18ndata \
-  glibc-locale
-
-ENV LANG="en_US.UTF-8"
-ENV LANGUAGE="en_US:en"
-ENV LC_ALL="en_US.UTF-8"
-ENV PYTHONIOENCODING=UTF-8
-
-RUN localedef -i en_US -f UTF-8 en_US.UTF-8
-
-RUN zypper --non-interactive install --no-recommends \
-  python3-pip \
   rapid-photo-downloader
 
-RUN pip install requests
+#ModuleNotFoundError: No module named 'pkg_resources'
+#ModuleNotFoundError: No module named 'requests'
+RUN zypper --non-interactive install --no-recommends \
+  python3-pip
+
+RUN pip3 install --upgrade pip wheel setuptools
+
+RUN pip3 install \
+  requests \
+  gudev
+
 
 ## Output after above command
 #Output of systemd-presets-branding-CAASP-15.0-3.1.noarch.rpm %posttrans script:
@@ -50,10 +59,10 @@ RUN pip install requests
 #ENV LC_ALL="en_US.UTF-8"
 
 #change to how suse creates users
-RUN groupadd -r rpd && useradd -g rpd -m rpd 
+RUN groupadd -r rpd && useradd -g rpd -m rpd && chown -R rpd:rpd /home/rpd
 
-VOLUME [ "/data/source/" ]
-VOLUME [ "/data/target/" ]
+#VOLUME [ "/data/source/" ]
+#VOLUME [ "/data/target/" ]
 
 # create a volume to persist configuration
 # location will change with 0.9 version 
@@ -62,12 +71,12 @@ VOLUME [ "/data/target/" ]
 
 #
 #USER rpd
-#WORKDIR /home/rpd
+WORKDIR /home/rpd
 
 #ENV LANG="en_US.UTF-8"
 #ENV LANGUAGE="en_US:en"
 #ENV LC_ALL="en_US.UTF-8"
 
 
-#ENTRYPOINT [ "/usr/bin/rapid-photo-downloader" ]
+CMD [ "/usr/bin/rapid-photo-downloader" ]
 #CMD [ "" ]
