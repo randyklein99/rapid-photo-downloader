@@ -7,26 +7,44 @@ FROM ubuntu:18.04
 ENV  DEBIAN_FRONTEND=noninteractive
 
 RUN apt-get update && apt-get install -y \
-  locales \
-  python3 \
-  python3-pip \
-  rapid-photo-downloader
+  locales && \
+  rm -rf /var/lib/apt/lists/* && \
+  localedef -i en_US -c -f UTF-8 -A usr/share/locale/locale.alias en_US.UTF-8
+ENV LANG en_US.utf8
+
+
+
+RUN apt-get update &&  apt-get install -y \
+  mesa-utils \
+  libgl1-mesa-glx \
+  libmediainfo-dev \
+  libmediainfo0v5 \
+  python3-pkg-resources \
+  python3-requests \
+  rapid-photo-downloader \
+  tzdata
+  
+
   
 RUN ln -fs /usr/share/zoneinfo/America/New_York /etc/localtime && dpkg-reconfigure --frontend=noninteractive tzdata
 
 #RUN apt-get update && apt-get install -y locales
-RUN locale-gen en_US.UTF-8 && \
-  sed -i -e 's/# en_US.UTF-8 UTF-8/en_US.UTF-8 UTF-8/' /etc/locale.gen && \
-  echo 'LANG="en_US.UTF-8"' > /etc/default/locale && \
-	dpkg-reconfigure --frontend=noninteractive locales && \
-	update-locale LANG=en_US.UTF-8
+#RUN locale-gen en_US.UTF-8 && \
+#  sed -i -e 's/# en_US.UTF-8 UTF-8/en_US.UTF-8 UTF-8/' /etc/locale.gen && \
+#  echo 'LANG="en_US.UTF-8"' > /etc/default/locale && \
+#	dpkg-reconfigure --frontend=noninteractive locales && \
+#	update-locale LANG=en_US.UTF-8
 
 ### Env vars for locales
-ENV LANG="en_US.UTF-8"
-ENV LANGUAGE="en_US:en"
-ENV LC_ALL="en_US.UTF-8"
+#ENV LANG="en_US.UTF-8"
+#ENV LANGUAGE="en_US:en"
+#ENV LC_ALL="en_US.UTF-8"
 
-RUN groupadd -r rpd && useradd -g rpd rpd
+#RUN pip3 install \
+#  requests
+
+# needs home directory with -m
+RUN groupadd -r rpd && useradd -m -g rpd rpd
 
 #VOLUME [ "/data/source/" ]
 #VOLUME [ "/data/target/" ]
@@ -39,7 +57,7 @@ RUN groupadd -r rpd && useradd -g rpd rpd
 #USER rpd
 WORKDIR /home/rpd
 
-#ENTRYPOINT [ "/usr/bin/rapid-photo-downloader" ]
+CMD [ "/usr/bin/rapid-photo-downloader" ]
 #CMD [ "" ]
 
 
