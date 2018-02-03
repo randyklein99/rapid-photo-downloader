@@ -20,5 +20,5 @@ VOLUME [ "/home/rpd/.local/share/" ]
 USER rpd
 WORKDIR /home/rpd
 
-ENTRYPOINT [ "/usr/bin/rapid-photo-downloader" ]
+CMD [ "/usr/bin/rapid-photo-downloader" ]
 #CMD [ "" ]
