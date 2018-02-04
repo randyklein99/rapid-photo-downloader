@@ -2,18 +2,16 @@
 #
 # docker run -it -e DISPLAY=<server>:0.0 -v <source>:/data/source -v <target>:/data/target/ -v <dir>\RapidPhotoDownloaderConfig\local\:/home/rpd/.local/share/ -v <dir>\RapidPhotoDownloaderConfig\home\:/home/rpd/ randyklein99/rapid-photo-downloader
 
-FROM debian:sid
+FROM python:3-alpine3.6
 
-## from https://hub.docker.com/r/library/debian/
-RUN apt-get update && apt-get install -y locales && rm -rf /var/lib/apt/lists/* \
-    && localedef -i en_US -c -f UTF-8 -A /usr/share/locale/locale.alias en_US.UTF-8
-ENV LANG en_US.utf8
-##
+RUN apk add --update \
+  wget \
+  bash
 
-RUN apt-get update && apt-get install -y \
-  rapid-photo-downloader
 
-RUN groupadd -r rpd && useradd -g rpd rpd
+
+RUN adduser -D -h /home/rpd rpd
+#RUN groupadd -r rpd && useradd -m -g rpd rpd
 
 #VOLUME [ "/data/source/" ]
 #VOLUME [ "/data/target/" ]
@@ -23,8 +21,13 @@ RUN groupadd -r rpd && useradd -g rpd rpd
 #VOLUME [ "/home/rpd/" ]
 #VOLUME [ "/home/rpd/.local/share/" ] 
 
-#USER rpd
-WORKDIR /home/rpd
 
-CMD [ "/usr/bin/rapid-photo-downloader" ]
+WORKDIR /home/rpd
+USER rpd
+
+RUN wget https://launchpad.net/rapid/pyqt/0.9.7/+download/install.py
+
+#RUN python3 install.py
+
+#CMD [ "/usr/bin/rapid-photo-downloader" ]
 #CMD [ "" ]
