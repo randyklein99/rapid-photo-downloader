@@ -73,6 +73,8 @@ RUN apt-get update &&  apt-get install -y \
   gstreamer1.0-libav \
   libnotify-bin
 
+#ENV XDG_RUNTIME_DIR /home/rpd
+
 USER rpd
 WORKDIR /home/rpd
 
