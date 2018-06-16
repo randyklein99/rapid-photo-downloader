@@ -1,7 +1,7 @@
 # Run Rapid Photo Downloader in a container on windows
 #
 # vcxsrv
-# docker run -it -e DISPLAY=<server>:0.0 -v <source>:/data/source -v <target>:/data/target/ -v <dir>\RapidPhotoDownloaderConfig\local\:/home/rpd/.local/share/ -v <dir>\RapidPhotoDownloaderConfig\home\:/home/rpd/ randyklein99/rapid-photo-downloader
+# docker run -it -e DISPLAY=<server>:0.0 -v <source>:/data/source -v <target>:/data/target/ -v "<dir>\RapidPhotoDownloaderConfig\home\:/home/rpd/.local/config/Rapid Photo Downloader" randyklein99/rapid-photo-downloader:script2
 
 FROM ubuntu:18.04
 
@@ -24,25 +24,25 @@ ENV LANG en_US.UTF-8
 
 
 RUN apt-get update &&  apt-get install -y \
-  python3 \
-  python3-pip \
-  wget \
-  sudo \
-  python3-pyqt5 \
   exiv2 \
-  libgphoto2-dev \
-  python3-dev \
-  libzmq3-dev \
-  qt5-image-formats-plugins \
-  python-gobject \
-  qt5-default \
-  udisks2 \
   gir1.2-gudev-1.0 \
-  libglib2.0-bin \
-  libgexiv2-2 \
   gstreamer1.0-libav \
-  libnotify-bin
-
+  libgexiv2-2 \
+  libglib2.0-bin \
+  libgphoto2-dev \
+  libnotify-bin \
+  libzmq3-dev \
+  python3 \
+  python3-dev \
+  python-gobject \
+  python3-pip \
+  python3-pyqt5 \
+  qt5-default \
+  qt5-image-formats-plugins \
+  udisks2 \
+  sudo \
+  wget
+  
 RUN pip3 install \
   PyQt5
 
@@ -57,14 +57,21 @@ RUN echo "rpd ALL=(ALL) NOPASSWD: ALL" >> /etc/sudoers
 RUN chmod 440 /etc/sudoers
 RUN mkdir -p /home/rpd && chown -R rpd:rpd /home/rpd
 
+
+#When the program is installed using the install.py script from the download page of this site, the program's directories are:
+#Installation: ~/.local/lib/python3.X/site-packages
+#Executable: ~/.local/bin
+#Configuration: ~/.local/config/Rapid Photo Downloader
+#Cache: ~/.local/cache/rapid-photo-downloader
+#Data: ~/.local/share/rapid-photo-downloader
+
 # folders for source and target directories
 VOLUME [ "/data/source/" ]
 VOLUME [ "/data/target/" ]
 
-
 # create a volume to persist configuration
 # location will change with 0.9 version in ubuntu 18.04
-#VOLUME [ "/home/rpd/.local/share/" ] 
+VOLUME [ "/home/rpd/.local/config/Rapid Photo Downloader" ] 
 
 USER rpd
 WORKDIR /home/rpd
@@ -76,6 +83,6 @@ RUN python3 install.py
 USER root
 RUN cp /etc/sudoers.old /etc/sudoers
 
-USER rpd
-CMD [ "/home/rpd/bin/rapid-photo-downloader" ]
+#USER rpd
+#CMD [ "/home/rpd/bin/rapid-photo-downloader" ]
 
