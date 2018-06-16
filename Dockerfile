@@ -24,40 +24,10 @@ ENV LANG en_US.UTF-8
 
 
 RUN apt-get update &&  apt-get install -y \
-  python3 
-
-RUN apt-get update &&  apt-get install -y \
+  python3 \
   python3-pip \
   wget \
-  sudo
-
-RUN pip3 install \
-  PyQt5
-
-
-# needs home directory with -m
-#RUN groupadd -r rpd && useradd -m -g rpd rpd
-#RUN useradd -m rpd && echo "rpd:rpd" | chpasswd && adduser rpd sudo
-
-RUN groupadd -r rpd
-RUN useradd -m -g rpd rpd && echo "rpd:rpd" | chpasswd
-RUN cp /etc/sudoers /etc/sudoers.old
-RUN chmod 777 /etc/sudoers
-RUN echo "rpd ALL=(ALL) NOPASSWD: ALL" >> /etc/sudoers
-RUN chmod 440 /etc/sudoers
-RUN mkdir -p /home/rpd && chown -R rpd:rpd /home/rpd
-
-VOLUME [ "/data/source/" ]
-VOLUME [ "/data/target/" ]
-#VOLUME ["/usr/local/share/man/man1"]
-#RUN chmod 777 /usr/local/share/man/man1
-
-# create a volume to persist configuration
-# location will change with 0.9 version in ubuntu 18.04
-#VOLUME [ "/home/rpd/" ]
-#VOLUME [ "/home/rpd/.local/share/" ] 
-
-RUN apt-get update &&  apt-get install -y \
+  sudo \
   python3-pyqt5 \
   exiv2 \
   libgphoto2-dev \
@@ -73,7 +43,28 @@ RUN apt-get update &&  apt-get install -y \
   gstreamer1.0-libav \
   libnotify-bin
 
-#ENV XDG_RUNTIME_DIR /home/rpd
+RUN pip3 install \
+  PyQt5
+
+
+# establish rpd user
+# temporarily elevate sudo - remove privs after script executes
+RUN groupadd -r rpd
+RUN useradd -m -g rpd rpd && echo "rpd:rpd" | chpasswd
+RUN cp /etc/sudoers /etc/sudoers.old
+RUN chmod 777 /etc/sudoers
+RUN echo "rpd ALL=(ALL) NOPASSWD: ALL" >> /etc/sudoers
+RUN chmod 440 /etc/sudoers
+RUN mkdir -p /home/rpd && chown -R rpd:rpd /home/rpd
+
+# folders for source and target directories
+VOLUME [ "/data/source/" ]
+VOLUME [ "/data/target/" ]
+
+
+# create a volume to persist configuration
+# location will change with 0.9 version in ubuntu 18.04
+#VOLUME [ "/home/rpd/.local/share/" ] 
 
 USER rpd
 WORKDIR /home/rpd
@@ -81,34 +72,10 @@ WORKDIR /home/rpd
 RUN wget https://launchpad.net/rapid/pyqt/0.9.9/+download/install.py
 RUN python3 install.py
 
+# remove sudo no passwd privileges
 USER root
 RUN cp /etc/sudoers.old /etc/sudoers
 
+USER rpd
+CMD [ "/home/rpd/bin/rapid-photo-downloader" ]
 
-
-
-#USER rpd
-#CMD [ "/home/rpd/bin/rapid-photo-downloader" ]
-
-
-# Still getting following error:
-#Traceback (most recent call last):
-#  File "/usr/bin/rapid-photo-downloader", line 6, in <module>
-#    from pkg_resources import load_entry_point
-#ModuleNotFoundError: No module named 'pkg_resources'
-
-# apt-get install python3-pip gets past this error
-# but now: ModuleNotFoundError: No module named 'requests'
-
-# pip3 install requests gets past this error
-# but now a gui pops up with Program aborting
-# and complaint about using root user
-
-# solved with: groupadd -r rpd && useradd -m -g rpd rpd 
-# and: su rpd
-# and now there is a segmentation fault
-
-
-
-# python-pyqt5
-# qt5-default
