@@ -1,7 +1,7 @@
 # Run Rapid Photo Downloader in a container on windows
 #
 # vcxsrv
-# docker run -it -e DISPLAY=<server>:0.0 -v <source>:/data/source -v <target>:/data/target/ -v "<dir>\RapidPhotoDownloaderConfig\home\:/home/rpd/.local/config/Rapid Photo Downloader" randyklein99/rapid-photo-downloader:script2
+# docker run -it -e DISPLAY=<server>:0.0 -v <source>:/data/source -v <target>:/data/target/ -v "<dir>\RapidPhotoDownloaderConfig\home\:/home/rpd/.config/Rapid Photo Downloader" randyklein99/rapid-photo-downloader:script2
 
 FROM ubuntu:18.04
 
@@ -59,19 +59,14 @@ RUN mkdir -p /home/rpd && chown -R rpd:rpd /home/rpd
 
 
 #When the program is installed using the install.py script from the download page of this site, the program's directories are:
-#Installation: ~/.local/lib/python3.X/site-packages
-#Executable: ~/.local/bin
-#Configuration: ~/.local/config/Rapid Photo Downloader
+#Executable: ~/bin
+#Configuration: ~/.config/Rapid Photo Downloader
 #Cache: ~/.local/cache/rapid-photo-downloader
 #Data: ~/.local/share/rapid-photo-downloader
 
 # folders for source and target directories
 VOLUME [ "/data/source/" ]
 VOLUME [ "/data/target/" ]
-
-# create a volume to persist configuration
-# location will change with 0.9 version in ubuntu 18.04
-VOLUME [ "/home/rpd/.local/config/Rapid Photo Downloader" ] 
 
 USER rpd
 WORKDIR /home/rpd
